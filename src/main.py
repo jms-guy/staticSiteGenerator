@@ -1,8 +1,10 @@
 from textnode import TextType, TextNode
+from htmlnode import HTMLNode
 
 def main():
-    test_node = TextNode("Testing...", TextType.ITALIC, "www.getsome.com")
-    print(test_node)
+    node = HTMLNode("a", props={"href": "https://test.com?a=1&b=2"})
+    result = node.props_to_html()
+    print(result)
 
 
 
