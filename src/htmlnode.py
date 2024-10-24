@@ -14,7 +14,6 @@ class HTMLNode:
             if self.props == None:
                 return ""
             else:
-
                 for prop in sorted(self.props):
                     modified_string = self.props[prop].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
                     html_string += f" {prop}=\"{modified_string}\""
@@ -22,3 +21,18 @@ class HTMLNode:
         
     def __repr__(self):
             return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
+    
+
+class LeafNode(HTMLNode):
+    def __init__(self, value, tag=None, props=None):
+        super().__init__(tag, value, None, props)
+
+    def to_html(self):
+         if not self.value or self.value == "" or self.value == None:
+              raise ValueError
+         if not self.tag:
+              return f"{self.value}"
+         
+         prop_string = self.props_to_html()
+         return f"<{self.tag}{prop_string}>{self.value}</{self.tag}>"
+         

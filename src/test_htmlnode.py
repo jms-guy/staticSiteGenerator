@@ -1,7 +1,30 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
+
+class TestLeafNode(unittest.TestCase):
+    def test_basics(self):
+        node = LeafNode("This is value text", "p")
+        self.assertEqual("<p>This is value text</p>", node.to_html())
+
+    def test_no_value(self):
+        node = LeafNode("", "p")
+        with self.assertRaises(ValueError):
+            node.to_html()
+        
+    def test_no_value2(self):
+        node = LeafNode(None, "p")
+        with self.assertRaises(ValueError):
+            node.to_html()
+
+    def test_no_tag(self):
+        node = LeafNode("This is value text")
+        self.assertEqual("This is value text", node.to_html())
+
+    def test_props(self):
+        node = LeafNode("This is value text", "a", {"href": "www.google.com"})
+        self.assertEqual('<a href="www.google.com">This is value text</a>', node.to_html())
 
 class TestHTMLNode(unittest.TestCase):
     def test_basics(self):

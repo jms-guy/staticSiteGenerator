@@ -1,10 +1,9 @@
 from textnode import TextType, TextNode
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 def main():
-    node = HTMLNode("a", props={"href": "https://test.com?a=1&b=2"})
-    result = node.props_to_html()
-    print(result)
+    node = LeafNode("value", "a", {"href": "https://test.com?a=1&b=2"})
+    print(node.to_html())
 
 
 
