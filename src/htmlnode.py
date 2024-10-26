@@ -23,6 +23,26 @@ class HTMLNode:
             return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
     
 
+class ParentNode(HTMLNode):
+    def __init__(self, children, tag=None, props=None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if not self.tag or self.tag == "" or self.tag == None:
+            raise ValueError("No tag")
+        if not self.children or self.children == [] or self.children == None:
+            raise ValueError("No children")
+        
+        parent_value = ""
+        for child in self.children:
+            if hasattr(child, "to_html"):
+                parent_value += child.to_html()
+            else:
+                parent_value += str(child)
+
+        prop_string = self.props_to_html()
+        return f"<{self.tag}{prop_string}>{parent_value}</{self.tag}>"
+
 class LeafNode(HTMLNode):
     def __init__(self, value, tag=None, props=None):
         super().__init__(tag, value, None, props)
@@ -30,7 +50,7 @@ class LeafNode(HTMLNode):
     def to_html(self):
          if not self.value or self.value == "" or self.value == None:
               raise ValueError
-         if not self.tag:
+         if not self.tag or self.tag == "" or self.tag == None:
               return f"{self.value}"
          
          prop_string = self.props_to_html()

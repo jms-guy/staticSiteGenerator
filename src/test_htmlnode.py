@@ -1,7 +1,121 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import *
 
+
+class TestParentNode(unittest.TestCase):
+    def test_basics(self):
+        node = ParentNode(
+            [
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            )
+        self.assertEqual("<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>", node.to_html())
+
+    def test_no_children(self):
+        node = ParentNode([], "p")
+        with self.assertRaises(ValueError) as context:
+            node.to_html()
+            self.assertEqual(str(context.exception), "No children")
+
+    def test_none_children(self):
+        node = ParentNode(None, "p")
+        with self.assertRaises(ValueError) as context:
+            node.to_html()
+            self.assertEqual(str(context.exception), "No children")
+
+    def test_no_tags(self):
+        node = ParentNode([
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "italic text"),
+            LeafNode(None, "Normal text"),
+            ])
+        with self.assertRaises(ValueError) as context:
+            node.to_html()
+            self.assertEqual(str(context.exception), "No tag")
+
+    def test_parent_children(self):
+        node = ParentNode(
+            [ParentNode(
+            [
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            ),
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            )
+        self.assertEqual("<p><p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>", node.to_html())
+
+    def test_multiple_parent_children(self):
+        node = ParentNode(
+            [ParentNode(
+            [
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            ),
+            ParentNode(
+            [
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            ),
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            )
+        self.assertEqual("<p><p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p><p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>", node.to_html())
+
+    def test_parent_children_parent(self):
+        node = ParentNode(
+            [ParentNode(
+            [
+            ParentNode(
+            [
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            ),
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            ),
+            LeafNode("Bold text", "b"),
+            LeafNode("Normal text", None),
+            LeafNode("italic text", "i"),
+            LeafNode("Normal text", None),
+            ],
+            "p",
+            )
+        self.assertEqual("<p><p><p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>", node.to_html())
 
 class TestLeafNode(unittest.TestCase):
     def test_basics(self):
