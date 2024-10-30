@@ -27,23 +27,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                         
 
 def extract_markdown_images(text):
-    alt_text_lst = []
-    url_lst = []
-
-    alt_text_lst.append(re.findall(r"\(![.*?]\)", text))
-    url_lst.append(re.findall(r"\((.*?)\)", text))
-
-    return list(zip(alt_text_lst, url_lst))
+    extracted_strs = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)     
+    return extracted_strs
 
 
-def extract_markdown_links(text):
-    anchor_text_lst = []
-    url_lst = []
 
-    anchor_text_lst.append(re.findall(r"\([.*?]\)", text))
-    url_lst.append(re.findall(r"\((.*?)\)", text))
-
-    return list(zip(anchor_text_lst, url_lst))
-
+def extract_markdown_links(text):   
+    extracted_strs = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return extracted_strs
                 
 
