@@ -3,6 +3,27 @@ import unittest
 from textnode import *
 from split_nodes import *
 
+
+class TestMarkdowntoBlocks(unittest.TestCase):
+    
+    def test_basics(self):
+        doc = "# This is a heading\n\nThis is a paragraph of text. It has some **bold** and *italic* words inside of it.\n\n* This is the first list item in a list block\n* This is a list item\n* This is another list item"
+        self.assertEqual(["# This is a heading", "This is a paragraph of text. It has some **bold** and *italic* words inside of it.", "* This is the first list item in a list block\n* This is a list item\n* This is another list item"],
+                         markdown_to_blocks(doc))
+        
+    def test_whitespace_removal(self):
+        doc = "First line\n\n     Second     line     \n\n Third\n  and fourth\n line     "
+        self.assertEqual(["First line", "Second     line", "Third\n  and fourth\n line"], markdown_to_blocks(doc))
+    
+    
+    def test_empty_block(self):
+        doc = "First line\n\nSecond line\n\n "
+        self.assertEqual(["First line", "Second line"], markdown_to_blocks(doc))
+
+    def test_empty_block2(self):
+        doc = "First line\n\n \n\nSecond line\n\n "
+        self.assertEqual(["First line", "Second line"], markdown_to_blocks(doc))
+
 class TestCompiledSplitNodes(unittest.TestCase):
     def test_basics(self):
         test_text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
