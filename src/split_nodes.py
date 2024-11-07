@@ -1,18 +1,6 @@
 from textnode import *
 from htmlnode import *
-import re
-
-
-def markdown_to_blocks(document):
-    blocks = document.split("\n\n")
-    final_blocks = []
-
-    for block in blocks:
-        stripped = block.strip()
-        if stripped != "":
-            final_blocks.append(stripped)
-    return final_blocks  
-
+import re 
 
 
 ####TextNodes splitting and formatting functions, turning strings into Textnodes of appropriate types
