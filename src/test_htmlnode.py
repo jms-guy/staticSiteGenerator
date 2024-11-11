@@ -143,11 +143,11 @@ class TestLeafNode(unittest.TestCase):
 class TestHTMLNode(unittest.TestCase):
     def test_basics(self):
         node = HTMLNode("h1", "This is text value", children=None, props={"href": "www.google.com", "target": "_blank",})
-        self.assertEqual("HTMLNode(h1, This is text value, None, {'href': 'www.google.com', 'target': '_blank'})", repr(node))
+        self.assertEqual("HTMLNode(h1, This is text value, [], {'href': 'www.google.com', 'target': '_blank'})", repr(node))
 
     def test_missing(self):
         node = HTMLNode("h1", "This is text value", props={"href": "www.google.com", "target": "_blank",})
-        self.assertEqual("HTMLNode(h1, This is text value, None, {'href': 'www.google.com', 'target': '_blank'})", repr(node))
+        self.assertEqual("HTMLNode(h1, This is text value, [], {'href': 'www.google.com', 'target': '_blank'})", repr(node))
 
     def test_conversion(self):
         node = HTMLNode("h1", "This is text value", props={"href": "www.google.com", "target": "_blank",})

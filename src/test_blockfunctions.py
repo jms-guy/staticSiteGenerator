@@ -6,6 +6,131 @@ from block_functions import *
 
 class TestBlocktoBlockType(unittest.TestCase):
 
+    def test_ordered_list_with_inline_markdown(self):
+        markdown = "1. Plain text\n2. Text with **bold** content\n3. Text with *italic* content"
+        node = markdown_to_html_node(markdown)
+    
+        # Check root structure
+        assert node.tag == "div"
+        assert len(node.children) == 1  # Just one block - the ordered list
+    
+        # Get the ol node
+        ol_node = node.children[0]
+        assert ol_node.tag == "ol"
+        assert len(ol_node.children) == 3  # Three list items
+    
+        # Check plain text item
+        plain_item = ol_node.children[0]
+        assert len(plain_item.children) == 1
+        assert plain_item.children[0].tag == None
+        assert plain_item.children[0].value == "Plain text"
+    
+        # Check bold item
+        bold_item = ol_node.children[1]
+        assert len(bold_item.children) == 3  # text, bold, text
+        assert bold_item.children[1].tag == "b"
+    
+        # Check italic item
+        italic_item = ol_node.children[2]
+        assert len(italic_item.children) == 3  # text, italic, text
+        assert italic_item.children[1].tag == "i"
+
+    def test_markdown_multiple_blocks(self):
+        text = "This is a paragraph\n\n```\nThis is a code block\n```\n\nThis is another paragraph"
+        node = markdown_to_html_node(text)
+    
+        assert node.tag == "div"
+        assert len(node.children) == 3
+    
+        # First paragraph
+        assert node.children[0].tag == "p"
+        assert node.children[0].children[0].value == "This is a paragraph"
+    
+        # Code block
+        assert node.children[1].tag == "pre"
+        assert node.children[1].children[0].tag == "code"
+        assert node.children[1].children[0].children[0].text == "This is a code block"
+    
+        # Second paragraph
+        assert node.children[2].tag == "p"
+        assert node.children[2].children[0].value == "This is another paragraph"
+
+    def test_unordered_list_with_inline_markdown(self):
+        markdown = "* Plain text\n* Text with **bold** content\n* Text with *italic* content"
+        node = markdown_to_html_node(markdown)
+    
+        # Check root structure
+        assert node.tag == "div"
+        assert len(node.children) == 1  # Just one block - the unordered list
+    
+        # Get the ul node
+        ul_node = node.children[0]
+        assert ul_node.tag == "ul"
+        assert len(ul_node.children) == 3  # Three list items
+    
+        # Check plain text item
+        plain_item = ul_node.children[0]
+        assert len(plain_item.children) == 1
+        assert plain_item.children[0].tag == None
+        assert plain_item.children[0].value == "Plain text"
+    
+        # Check bold item
+        bold_item = ul_node.children[1]
+        assert len(bold_item.children) == 3  # text, bold, text
+        assert bold_item.children[1].tag == "b"
+    
+        # Check italic item
+        italic_item = ul_node.children[2]
+        assert len(italic_item.children) == 3  # text, italic, text
+        assert italic_item.children[1].tag == "i"
+
+    def test_markdown_to_html_node(self):
+        text = "This is a paragraph"
+        node = markdown_to_html_node(text)
+
+        assert node.tag == "div"
+        assert len(node.children) == 1
+        assert node.children[0].tag == "p"
+        assert node.children[0].children[0].value == "This is a paragraph"
+
+    def test_markdown_to_heading(self):
+        text = "# This is a heading"
+        node = markdown_to_html_node(text)
+
+        assert node.tag == "div"
+        assert len(node.children) == 1
+        assert node.children[0].tag == "h1"
+        assert node.children[0].children[0].value == "This is a heading"
+
+    def test_markdown_to_heading2(self):
+        text = "###### This is a heading"
+        node = markdown_to_html_node(text)
+
+        assert node.tag == "div"
+        assert len(node.children) == 1
+        assert node.children[0].tag == "h6"
+        assert node.children[0].children[0].value == "This is a heading"
+
+    def test_markdown_to_quote(self):
+        text = "> This is a quote"
+        node = markdown_to_html_node(text)
+
+        assert node.tag == "div"
+        assert len(node.children) == 1
+        assert node.children[0].tag == "blockquote"
+        assert node.children[0].children[0].value == "This is a quote"
+
+    def test_markdown_to_code(self):
+        text = "```\nThis is a code block\n```"
+        node = markdown_to_html_node(text)
+
+        assert node.tag == "div"
+        assert len(node.children) == 1
+        assert node.children[0].tag == "pre"
+        assert node.children[0].children[0].tag == "code"
+        assert node.children[0].children[0].children[0].text == "This is a code block"
+
+
     def test_ordered_list(self):
         block = "1. Ordered\n2. List\n3. One"
         self.assertEqual("ordered_list", block_to_block_type(block))
