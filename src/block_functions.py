@@ -2,9 +2,16 @@ from textnode import *
 from htmlnode import *
 from split_nodes import *
 
+def extract_title(markdown):
+    blocks = markdown.split("\n")
+    for block in blocks:
+        if block.startswith("# "):
+            return block.lstrip("# ")
+    raise Exception("No h1 header")
+
 def markdown_to_html_node(markdown_document):
     blocks = markdown_to_blocks(markdown_document)
-    html_blocks = []
+    children = []
 
     for block in blocks:
         block_type = block_to_block_type(block)
@@ -20,8 +27,8 @@ def markdown_to_html_node(markdown_document):
             result = block_to_ordered_list(block)
         elif block_type == "paragraph":
             result = block_to_paragraph(block)
-        html_blocks.append(result)
-    return HTMLNode("div", None, html_blocks)
+        children.append(result)
+    return ParentNode(tag="article", children=children, props=None)
         
 
 def block_to_heading(block):
@@ -32,36 +39,36 @@ def block_to_heading(block):
             count +=1
     if count < 1 or count > 6:
         raise ValueError
-    return HTMLNode(f"h{count}", None, text_to_children(block.lstrip("# ")))
+    return ParentNode(tag=f"h{count}", children=text_to_children(block.lstrip("# ")))
 
 def block_to_code(block):
     lines = block.split("\n")
     code_lines = lines[1:-1]
     code_block = TextNode(("\n".join(code_lines)), "text")
-    code_node = HTMLNode("code", None, [code_block])
-    return HTMLNode("pre", None, [code_node])
+    code_node = ParentNode(tag="code", children=[code_block])
+    return ParentNode(tag="pre", children=[code_node])
 
 def block_to_quote(block):
-   node = HTMLNode("blockquote", None, text_to_children(block.lstrip("> ")))
+   node = ParentNode(tag="blockquote", children=text_to_children(block.lstrip("> ")))
    return node
 
 def block_to_unordered_list(block):
     lines = block.split("\n")
     children = []
     for line in lines:
-        children.append(HTMLNode("li", None, text_to_children(line.lstrip("* "))))
-    return HTMLNode("ul", None, children)
+        children.append(ParentNode(tag="li", children=text_to_children(line.lstrip("* "))))
+    return ParentNode(tag="ul", children=children)
 
 def block_to_ordered_list(block):
     lines = block.split("\n")
     children = []
     for line in lines:
-        strippped_line = line.lstrip("1234567890. ")
-        children.append(HTMLNode("li", None, text_to_children(strippped_line)))
-    return HTMLNode("ol", None, children)
+        stripped_line = line.lstrip("1234567890. ")
+        children.append(ParentNode(tag="li", children=text_to_children(stripped_line)))
+    return ParentNode(tag="ol", children=children)
 
 def block_to_paragraph(block):
-    node = HTMLNode("p", None, text_to_children(block))
+    node = ParentNode(tag="p", children=text_to_children(block))
     return node
 
 

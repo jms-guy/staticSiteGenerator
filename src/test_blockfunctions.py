@@ -4,6 +4,19 @@ from textnode import *
 from split_nodes import *
 from block_functions import *
 
+class TestExtractHeaderFunction(unittest.TestCase):
+    def test_extract_header(self):
+        markdown = "# Header one\n\n## Header two\n\n### Header three"
+        header = extract_title(markdown)
+
+        assert header == "Header one"
+
+    def test_extract_header2(self):
+        markdown = "## Header one\n\n# Header two\n\n### Header three"
+        header = extract_title(markdown)
+
+        assert header == "Header two"
+
 class TestBlocktoBlockType(unittest.TestCase):
 
     def test_ordered_list_with_inline_markdown(self):
