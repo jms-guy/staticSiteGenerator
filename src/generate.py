@@ -2,6 +2,19 @@ import os, shutil
 from block_functions import *
 
 
+# Function to generate pages recursively
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    content_entries = os.listdir(dir_path_content)
+    for filename in content_entries:
+        file_path = os.path.join(dir_path_content, filename)
+        if os.path.isfile(file_path) and file_path.endswith(".md"):
+            copied_path = os.path.join(dest_dir_path, filename).replace(".md", ".html")
+            generate_page(file_path, template_path, copied_path)
+        elif os.path.isdir(file_path):
+            copied_dir = os.path.join(dest_dir_path, filename)
+            os.makedirs(copied_dir, exist_ok=True)
+            generate_pages_recursive(file_path, template_path, copied_dir)
 
 #Function to generate a webpage of content
 

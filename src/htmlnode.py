@@ -48,11 +48,14 @@ class LeafNode(HTMLNode):
         super().__init__(tag, value, None, props)
 
     def to_html(self):
-         if not self.value or self.value == "" or self.value == None:
-              raise ValueError
-         if not self.tag or self.tag == "" or self.tag == None:
-              return f"{self.value}"
+        if self.tag == "img":
+            prop_string = self.props_to_html()
+            return f"<{self.tag}{prop_string}/>" 
+        if not self.value or self.value == "" or self.value == None:
+            raise ValueError
+        if not self.tag or self.tag == "" or self.tag == None:
+            return f"{self.value}"
          
-         prop_string = self.props_to_html()
-         return f"<{self.tag}{prop_string}>{self.value}</{self.tag}>"
+        prop_string = self.props_to_html()
+        return f"<{self.tag}{prop_string}>{self.value}</{self.tag}>"
          
